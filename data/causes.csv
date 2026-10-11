@@ -1,0 +1,4 @@
+drug_id,side_effect_id,frequency
+R01,S01,unknown-demo
+R04,S02,unknown-demo
+R12,S03,unknown-demo
