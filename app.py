@@ -147,7 +147,7 @@ def make_figure(records):
             "y": float((start[1] + end[1]) / 2),
             "text": record["relationship_type"],
             "showarrow": False,
-            "font": {"size": 9, "color": "#63706d"},
+            "font": {"size": 9, "color": "#000000"},
             "bgcolor": "rgba(250, 249, 246, 0.84)",
             "borderpad": 2,
         })
@@ -193,8 +193,8 @@ def make_figure(records):
     figure.update_layout(
         height=650,
         margin={"l": 10, "r": 10, "t": 10, "b": 10},
-        paper_bgcolor="#faf9f6",
-        plot_bgcolor="#faf9f6",
+        paper_bgcolor="#ffffff",
+        plot_bgcolor="#ffffff",
         annotations=edge_annotations,
         xaxis={"visible": False, "fixedrange": False},
         yaxis={"visible": False, "fixedrange": False, "scaleanchor": "x", "scaleratio": 1},
@@ -207,20 +207,38 @@ def make_figure(records):
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap');
-:root { --ink: #26332f; --muted: #71807a; --paper: #faf9f6; --rule: #dce2dc; --green: #2a9d8f; }
+:root { --ink: #111111; --muted: #5f6368; --paper: #f5f3ef; --sidebar: #dfeeff; --panel: #ffffff; --rule: #bfd7f7; --gray: #6b7280; --gray-soft: #e5e7eb; }
 html, body, [class*="css"] { font-family: 'Manrope', sans-serif; color: var(--ink); }
-.stApp { background: var(--paper); }
+.stApp { background: linear-gradient(180deg, var(--paper) 0%, #f0f4f1 100%); }
 [data-testid="stHeader"] { background: transparent; }
-[data-testid="stSidebar"] { background: #eff2ed; border-right: 1px solid var(--rule); }
-.masthead { border-bottom: 1px solid var(--rule); padding: 1.2rem 0 1.45rem; margin-bottom: 1.4rem; }
-.eyebrow { font: 500 11px 'DM Mono', monospace; letter-spacing: 1.5px; color: var(--green); text-transform: uppercase; }
-.title { font-size: 34px; font-weight: 800; letter-spacing: 0; line-height: 1.15; margin: 8px 0 5px; }
+[data-testid="stSidebar"] { background: var(--sidebar); border-right: 1px solid var(--rule); }
+section[data-testid="stSidebar"] > div { background: var(--sidebar); }
+section[data-testid="stSidebar"] *,
+section[data-testid="stSidebar"] label,
+section[data-testid="stSidebar"] .stRadio > div,
+section[data-testid="stSidebar"] .stSelectbox,
+section[data-testid="stSidebar"] .stMultiSelect,
+section[data-testid="stSidebar"] .stSlider,
+section[data-testid="stSidebar"] .stButton > button,
+section[data-testid="stSidebar"] .stTextInput,
+section[data-testid="stSidebar"] .stTextArea,
+section[data-testid="stSidebar"] .stMarkdown p,
+section[data-testid="stSidebar"] .stMarkdown h1,
+section[data-testid="stSidebar"] .stMarkdown h2,
+section[data-testid="stSidebar"] .stMarkdown h3,
+section[data-testid="stSidebar"] .stMarkdown h4,
+section[data-testid="stSidebar"] .stMarkdown h5,
+section[data-testid="stSidebar"] .stMarkdown h6 { color: #111111 !important; }
+.main .block-container { padding-top: 1.2rem; }
+.masthead { border-bottom: 1px solid var(--rule); padding: 1.2rem 0 1.45rem; margin-bottom: 1.4rem; background: rgba(255,255,255,0.28); border-radius: 14px; padding-left: 1rem; padding-right: 1rem; }
+.eyebrow { font: 500 11px 'DM Mono', monospace; letter-spacing: 1.5px; color: var(--gray); text-transform: uppercase; }
+.title { font-size: 34px; font-weight: 800; letter-spacing: 0; line-height: 1.15; margin: 8px 0 5px; color: var(--ink); }
 .subtitle { font-size: 14px; color: var(--muted); }
 .metric { border-top: 2px solid var(--ink); padding-top: 10px; }
-.metric-value { font: 500 25px 'DM Mono', monospace; }
+.metric-value { font: 500 25px 'DM Mono', monospace; color: var(--ink); }
 .metric-label { font-size: 11px; color: var(--muted); text-transform: uppercase; margin-top: 3px; }
-.note { font-size: 12px; line-height: 1.6; color: var(--muted); border-left: 2px solid #e9c46a; padding: 4px 0 4px 10px; }
-div[data-testid="stPlotlyChart"] { border: 1px solid var(--rule); }
+.note { font-size: 12px; line-height: 1.6; color: var(--muted); border-left: 2px solid #9aa3ad; padding: 4px 0 4px 10px; }
+div[data-testid="stPlotlyChart"] { border: 1px solid var(--rule); background: var(--panel); }
 </style>
 <div class="masthead">
   <div class="eyebrow">Medigraph / Synthetic dataset</div>
@@ -251,7 +269,7 @@ with st.sidebar:
         default=["TREATS", "CONTRAINDICATED_IN", "INTERACTS_WITH", "CAUSES", "HAS_CONDITION", "TAKES"],
     )
     row_limit = st.slider("Relationship limit", min_value=20, max_value=400, value=120, step=20)
-    refresh = st.button("Refresh graph", type="primary", use_container_width=True)
+    refresh = st.button("Refresh graph", type="primary", width="stretch")
     if refresh:
         fetch_graph.clear()
     st.markdown(
@@ -295,7 +313,7 @@ for column, value, label in (
 
 st.write("")
 if records:
-    st.plotly_chart(make_figure(records), use_container_width=True, config={"displaylogo": False, "scrollZoom": True})
+    st.plotly_chart(make_figure(records), width="stretch", config={"displaylogo": False, "scrollZoom": True})
     with st.expander("Inspect returned relationships"):
         rows = []
         for record in records:
@@ -304,6 +322,6 @@ if records:
                 "Relationship": record["relationship_type"],
                 "Target": node_title(record["target_labels"], record["target_properties"]),
             })
-        st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
+        st.dataframe(pd.DataFrame(rows), width="stretch", hide_index=True)
 else:
     st.info("No relationships match these filters. Try selecting more node labels or relationship types.")
